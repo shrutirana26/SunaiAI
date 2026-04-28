@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CourtAI — Legal Intelligence Dashboard</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo-container">
+            <span class="material-icons-round" style="color: var(--accent); font-size: 32px;">gavel</span>
+            <span class="brand">CourtAI</span>
+        </div>
+
+        <nav>
+            <div class="nav-link active" onclick="navigateTo('dashboard', this)">
+                <span class="material-icons-round">dashboard</span>
+                <span id="nav-overview">Overview</span>
+            </div>
+            <div class="nav-link" onclick="navigateTo('dashboard', this)">
+                <span class="material-icons-round">description</span>
+                <span id="nav-analyzer">FIR Analyzer</span>
+            </div>
+            <div class="nav-link" onclick="openCamera(this)">
+                <span class="material-icons-round">photo_camera</span>
+                <span id="nav-scan">Scan Document</span>
+            </div>
+            <div class="nav-link" onclick="findNearbyHelp(this)">
+                <span class="material-icons-round">near_me</span>
+                <span id="nav-help">Nearby Help</span>
+            </div>
+        </nav>
+
+        <div style="margin-top: auto; padding: 20px; background: rgba(255,255,255,0.03); border-radius: var(--radius-md);">
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; font-weight: 800;">A</div>
+                <div>
+                    <div style="font-size: 12px; font-weight: 700;" id="user-role">Advocate AI</div>
+                    <div style="font-size: 10px; color: var(--text-muted);" id="user-tier">Pro Version</div>
+                </div>
+            </div>
+            <button class="nav-link" style="width: 100%; border: 1px solid var(--border); font-size: 12px;" onclick="toggleLang()" id="lang-btn">
+                <span class="material-icons-round">language</span>
+                Switch to Hindi
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Hero Section -->
+        <header class="hero">
+            <h1 id="hero-title">Legal Intelligence <span style="color: var(--accent)">Dashboard</span></h1>
+            <p id="hero-sub">Advanced FIR analysis and legal rights monitoring for professional aid.</p>
+        </header>
+
+        <!-- Stats Quick View -->
+        <section class="stats-grid">
+            <div class="stat-card">
+                <span class="label" id="label-bail">Bail Status</span>
+                <span class="value" id="stat-bail">-</span>
+            </div>
+            <div class="stat-card" style="border-bottom: 2px solid var(--danger);">
+                <span class="label" id="label-risk">Risk Level</span>
+                <span class="value" id="stat-risk" style="color: var(--danger);">-</span>
+            </div>
+            <div class="stat-card">
+                <span class="label" id="label-count">Sections Count</span>
+                <span class="value" id="stat-count">0</span>
+            </div>
+        </section>
+
+        <!-- View Screens -->
+        <div id="screens">
+            <!-- Dashboard Screen -->
+            <section id="screen-dashboard" class="screen active">
+                <div class="content-grid">
+                    <!-- Left: Upload & Search -->
+                    <div class="glass-card">
+                        <h2><span class="material-icons-round">upload_file</span> Document Intake</h2>
+                        <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 24px;">Upload an FIR or legal document to begin intelligence gathering.</p>
+                        
+                        <input type="file" id="fir-upload" accept=".pdf,image/*" style="display:none" onchange="uploadFIR(this)">
+                        <input type="file" id="camera-upload" accept="image/*" capture="environment" style="display:none" onchange="uploadFIR(this)">
+                        
+                        <div style="display: flex; gap: 12px; margin-bottom: 32px;">
+                            <button class="btn-glass" onclick="document.getElementById('fir-upload').click()">
+                                <span class="material-icons-round">cloud_upload</span> Upload File
+                            </button>
+                            <button class="btn-glass" style="background: rgba(255,255,255,0.05); color: #fff;" onclick="openCamera()">
+                                <span class="material-icons-round">camera</span> Use Camera
+                            </button>
+                        </div>
+
+                        <div class="search-box">
+                            <span class="material-icons-round" style="color: var(--accent)">psychology</span>
+                            <input type="text" id="ai-query" placeholder="Ask a specific legal question..." onkeypress="if(event.key==='Enter') askAI()">
+                            <button onclick="askAI()" style="background:none; border:none; color: var(--accent); cursor:pointer;">
+                                <span class="material-icons-round">send</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Right: Info Panel -->
+                    <div class="glass-card" style="background: linear-gradient(180deg, rgba(59,130,246,0.05) 0%, transparent 100%);">
+                        <h2><span class="material-icons-round">lightbulb</span> Quick Guide</h2>
+                        <ul style="list-style: none; display: flex; flex-direction: column; gap: 16px;">
+                            <li style="display: flex; gap: 12px; font-size: 14px; color: var(--text-muted);">
+                                <span class="material-icons-round" style="color: var(--success); font-size: 18px;">check_circle</span>
+                                Upload PDF or Images for instant OCR analysis.
+                            </li>
+                            <li style="display: flex; gap: 12px; font-size: 14px; color: var(--text-muted);">
+                                <span class="material-icons-round" style="color: var(--success); font-size: 18px;">check_circle</span>
+                                AI calculates bail risk and bailability automatically.
+                            </li>
+                            <li style="display: flex; gap: 12px; font-size: 14px; color: var(--text-muted);">
+                                <span class="material-icons-round" style="color: var(--success); font-size: 18px;">check_circle</span>
+                                Multi-language support (English / Hindi).
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Results Screen -->
+            <section id="screen-results" class="screen">
+                <div class="content-grid">
+                    <!-- Left: Timeline & Sections -->
+                    <div class="glass-card">
+                        <h2><span class="material-icons-round">article</span> Legal Findings</h2>
+                        <div id="result-center-display">
+                            <!-- Populated by JS -->
+                        </div>
+                        <div id="result"></div>
+                    </div>
+
+                    <!-- Right: Analytics Panel -->
+                    <div class="glass-card">
+                        <h2><span class="material-icons-round">analytics</span> Intelligence Panel</h2>
+                        
+                        <div style="margin-bottom: 32px;">
+                            <div style="font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase;">AI Summary</div>
+                            <div id="case-summary-box" style="font-size: 14px; line-height: 1.6; color: var(--text-muted);"></div>
+                        </div>
+
+                        <div style="margin-bottom: 32px;">
+                            <div style="font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 16px; text-transform: uppercase;">Intelligence Analytics</div>
+                            <div style="display: flex; gap: 20px; align-items: center; background: rgba(255,255,255,0.02); padding: 20px; border-radius: var(--radius-md); border: 1px solid var(--border);">
+                                <div style="width: 100px; height: 100px; position: relative;">
+                                    <canvas id="gauge-chart"></canvas>
+                                    <div id="gauge-label" style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 800; font-family: var(--font-outfit);">0%</div>
+                                </div>
+                                <div style="flex: 1; height: 100px;">
+                                    <canvas id="trend-chart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="analytics-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 32px;">
+                            <!-- Bail Analytics populated by JS -->
+                        </div>
+
+                        <div style="margin-bottom: 32px;">
+                            <div style="font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 12px; text-transform: uppercase;">Guidance Steps</div>
+                            <div id="guidance-display"></div>
+                        </div>
+
+                        <div id="nearby-help-display"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Camera Screen -->
+            <section id="screen-camera" class="screen">
+                <div class="glass-card" style="max-width: 800px; margin: 0 auto;">
+                    <div class="camera-container">
+                        <video id="webcam" autoplay playsinline></video>
+                        <div class="camera-overlay">
+                            <div class="scan-frame"></div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 24px; display: flex; gap: 16px; justify-content: center;">
+                        <button class="btn-glass" onclick="captureSnapshot()">
+                            <span class="material-icons-round">camera</span> Capture Document
+                        </button>
+                        <button class="btn-glass" style="background: rgba(239, 68, 68, 0.1); color: var(--danger);" onclick="stopCamera()">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-screen">
+        <div style="text-align: center;">
+            <div class="scanner-wrap">
+                <div class="loader"></div>
+                <div class="scanner-line"></div>
+            </div>
+            <p style="margin-top: 24px; font-family: var(--font-outfit); font-weight: 700; letter-spacing: 0.1em; color: var(--accent);">PROCESSING INTELLIGENCE</p>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

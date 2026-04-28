@@ -1,0 +1,339 @@
+﻿<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CourtAI - Document Vault</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #0A1628;
+            margin-bottom: 80px; /* Space for BottomNavBar */
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        .glass-card:hover {
+            background: rgba(255, 255, 255, 0.12);
+        }
+        .hollow-glass {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-surface-variant": "#d0c5b2",
+                        "surface-container-highest": "#38342d",
+                        "inverse-on-surface": "#343029",
+                        "surface-container-high": "#2d2a23",
+                        "on-tertiary-fixed": "#241a00",
+                        "tertiary-fixed": "#ffdf91",
+                        "primary-fixed-dim": "#e6c364",
+                        "tertiary-container": "#c6a95d",
+                        "primary-container": "#c9a84c",
+                        "inverse-surface": "#e9e1d7",
+                        "primary": "#e6c364",
+                        "on-tertiary-container": "#503d00",
+                        "secondary-fixed-dim": "#bbc7df",
+                        "surface": "#16130d",
+                        "surface-dim": "#16130d",
+                        "error-container": "#93000a",
+                        "on-background": "#e9e1d7",
+                        "on-primary": "#3d2e00",
+                        "tertiary-fixed-dim": "#e2c375",
+                        "surface-container": "#221f19",
+                        "surface-container-low": "#1e1b15",
+                        "on-primary-container": "#503d00",
+                        "inverse-primary": "#755b00",
+                        "outline": "#99907e",
+                        "on-tertiary-fixed-variant": "#584400",
+                        "secondary-container": "#3e495e",
+                        "surface-tint": "#e6c364",
+                        "on-secondary-fixed": "#101c2e",
+                        "secondary": "#bbc7df",
+                        "on-tertiary": "#3d2e00",
+                        "surface-variant": "#38342d",
+                        "secondary-fixed": "#d7e3fc",
+                        "outline-variant": "#4d4637",
+                        "background": "#16130d",
+                        "on-error-container": "#ffdad6",
+                        "primary-fixed": "#ffe08f",
+                        "surface-bright": "#3d3931",
+                        "on-surface": "#e9e1d7",
+                        "surface-container-lowest": "#100e08",
+                        "on-primary-fixed-variant": "#584400",
+                        "on-secondary-fixed-variant": "#3c475b",
+                        "on-secondary-container": "#adb9d1",
+                        "error": "#ffb4ab",
+                        "on-error": "#690005",
+                        "on-secondary": "#253144",
+                        "tertiary": "#e3c476",
+                        "on-primary-fixed": "#241a00"
+                    },
+                    fontFamily: {
+                        "h3": ["Plus Jakarta Sans"],
+                        "label-sm": ["Inter"],
+                        "h1": ["Plus Jakarta Sans"],
+                        "body-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "h2": ["Plus Jakarta Sans"]
+                    },
+                    fontSize: {
+                        "h3": ["24px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                        "label-sm": ["14px", {"lineHeight": "1.4", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "h1": ["40px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "h2": ["32px", {"lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-[#0A1628] text-on-surface font-body-md overflow-x-hidden">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-6 h-16 bg-[#0A1628]/90 backdrop-blur-xl border-b border-white/15 shadow-2xl">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[#C9A84C]" data-icon="gavel">gavel</span>
+<h1 class="text-xl font-black bg-gradient-to-r from-[#C9A84C] to-[#E8C97A] bg-clip-text text-transparent font-plus-jakarta-sans tracking-tight">CourtAI</h1>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-white/60 hover:opacity-80 transition-opacity active:scale-95 duration-200">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="w-8 h-8 rounded-full border border-primary/30 overflow-hidden">
+<img alt="User Profile" data-alt="close-up portrait of a professional legal advisor in a sharp suit against a blurred office background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAVxDmpT21_Ibio-DfepcXUVnNjl1LhQGV95t9-CRVhRZf15jH47ifufiOqVQysUKd-dZGv8EC7HH42x_ijrsRXZ19zjxAKlxebqHzRzQ3eWHf3_-4T0vKXt1e72XosJOhChoTku9zRQoQqUTUe-ybKU-t8VvpsjKJHmAfxMOVGc7EIKx7VuTPCZqWeHU-YrMi1nhxjyslx8P-RiIqYwQdvlQXp3OS939AsqM4qE-RAQvht5j5qX7nCoLsyiSQsU8DOUVXRzewvghI"/>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="pt-24 px-6 max-w-[1200px] mx-auto min-h-screen">
+<!-- Header Section -->
+<section class="mb-8">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+<div>
+<h2 class="font-h2 text-h2 text-on-surface mb-2">Document Vault</h2>
+<p class="text-white/60 text-body-md">Manage your secure legal archives and case filings.</p>
+</div>
+<button class="bg-gradient-to-r from-[#C9A84C] to-[#E8C97A] text-[#0A1628] font-bold px-6 py-3 rounded-[14px] flex items-center gap-2 active:scale-95 transition-all shadow-lg">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">upload_file</span>
+<span>Upload Document</span>
+</button>
+</div>
+</section>
+<!-- Search & Filter Bar -->
+<section class="mb-10">
+<div class="flex flex-col lg:flex-row gap-4 items-center">
+<div class="relative w-full lg:flex-1 group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-white/40 group-focus-within:text-[#C9A84C] transition-colors">search</span>
+<input class="w-full bg-white/5 border border-white/10 rounded-[14px] py-3.5 pl-12 pr-4 text-white focus:outline-none focus:ring-2 focus:ring-[#C9A84C]/50 focus:border-[#C9A84C] transition-all placeholder:text-white/30" placeholder="Search case files, notices, or summaries..." type="text"/>
+</div>
+<div class="flex items-center gap-2 overflow-x-auto pb-2 w-full lg:w-auto scrollbar-hide">
+<button class="whitespace-nowrap px-5 py-2 rounded-full bg-primary text-on-primary text-label-sm shadow-md">All</button>
+<button class="whitespace-nowrap px-5 py-2 rounded-full border border-white/20 text-white/70 text-label-sm hover:border-[#C9A84C] hover:text-[#C9A84C] transition-all">FIR</button>
+<button class="whitespace-nowrap px-5 py-2 rounded-full border border-white/20 text-white/70 text-label-sm hover:border-[#C9A84C] hover:text-[#C9A84C] transition-all">Bail</button>
+<button class="whitespace-nowrap px-5 py-2 rounded-full border border-white/20 text-white/70 text-label-sm hover:border-[#C9A84C] hover:text-[#C9A84C] transition-all">Notice</button>
+<button class="whitespace-nowrap px-5 py-2 rounded-full border border-white/20 text-white/70 text-label-sm hover:border-[#C9A84C] hover:text-[#C9A84C] transition-all">Evidence</button>
+</div>
+</div>
+</section>
+<!-- Document Grid -->
+<section class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+<!-- Card 1 -->
+<div class="glass-card rounded-[14px] p-4 flex flex-col sm:flex-row gap-4 group transition-all duration-300">
+<div class="relative w-full sm:w-32 h-40 sm:h-32 flex-shrink-0 rounded-lg overflow-hidden bg-black/20">
+<img class="w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity" data-alt="close up of a legal document with a red wax seal and elegant typography on aged paper" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDUSM1sRI-8Vnne1g-ckDbzf6wkrWkCHdLYIvMFlJR5ICHQv2KHRmelDZDeNNY7QO3GSX85G0YTi-K9_57GzWJXhH_zVE1beJsnuPMeC_cySGaJIBVjM_JR5mgyYKeEt2CXictNt8E04dNCBJ6d7jt--Q9qj3_3dJVgiJQA7O-zKXJFX-kOmXzkqSRjRftoV-rJY0fcpl4Q7SxnFBpaxBRutjYiT2LQzJrLlGEcjbR0Uh2xeELEuv41JupCTRHlA70JZxCqRIvFvkA"/>
+<div class="absolute inset-0 flex items-center justify-center">
+<span class="material-symbols-outlined text-white/80 text-4xl" data-icon="description">description</span>
+</div>
+<!-- Amber Deadline Badge -->
+<div class="absolute top-2 left-2 px-2 py-1 bg-amber-500 text-[#0A1628] text-[10px] font-bold rounded uppercase tracking-wider shadow-lg">
+                        Deadline: 2 days
+                    </div>
+</div>
+<div class="flex-1 flex flex-col justify-between py-1">
+<div>
+<div class="flex justify-between items-start">
+<h3 class="font-h3 text-[18px] text-white group-hover:text-[#C9A84C] transition-colors">FIR_2024_089_STATE.pdf</h3>
+<button class="text-white/40 hover:text-[#C9A84C]"><span class="material-symbols-outlined">more_vert</span></button>
+</div>
+<p class="text-white/40 text-sm mt-1">Criminal Procedure Code ΓÇó 4.2 MB</p>
+</div>
+<div class="flex items-center justify-between mt-4">
+<span class="text-xs text-white/30 flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">calendar_today</span>
+                            Uploaded Oct 12, 2023
+                        </span>
+<div class="flex gap-2">
+<button class="p-2 rounded-lg hollow-glass text-white/60 hover:text-white transition-colors">
+<span class="material-symbols-outlined text-sm">visibility</span>
+</button>
+<button class="p-2 rounded-lg bg-[#C9A84C]/10 text-[#C9A84C] hover:bg-[#C9A84C]/20 transition-colors">
+<span class="material-symbols-outlined text-sm">download</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="glass-card rounded-[14px] p-4 flex flex-col sm:flex-row gap-4 group transition-all duration-300">
+<div class="relative w-full sm:w-32 h-40 sm:h-32 flex-shrink-0 rounded-lg overflow-hidden bg-black/20">
+<img class="w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity" data-alt="a stack of legal leather-bound books on a dark wood shelf in a dimly lit library" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDdEWi063WLR9yaM3aDr9Uk1MP1kDbDHwsfOenliQIikdS0vOKqUtFtlgyB5y8NS9dm2rqinnqzLF3duTWDtFHFTOzrdSQrW_mFsGFohG8FQ__ad5gHy1gRmpMKgOWNVQQAq4vlIwDUz0H3uY4nzdqpKYB2dA4k2-jRjJyF8Z42l77ahi6OQGSv5dT62IWujzPrI9l6iSrJWatx5Tozf_OH0zf-RhpnAaLybhJHahpTSg8mJzze3w3NN3u12Kx39S9p0ljTd7F8AO8"/>
+<div class="absolute inset-0 flex items-center justify-center">
+<span class="material-symbols-outlined text-white/80 text-4xl" data-icon="gavel">gavel</span>
+</div>
+</div>
+<div class="flex-1 flex flex-col justify-between py-1">
+<div>
+<div class="flex justify-between items-start">
+<h3 class="font-h3 text-[18px] text-white group-hover:text-[#C9A84C] transition-colors">Bail_Application_V2.docx</h3>
+<button class="text-white/40 hover:text-[#C9A84C]"><span class="material-symbols-outlined">more_vert</span></button>
+</div>
+<p class="text-white/40 text-sm mt-1">Delhi High Court ΓÇó 1.8 MB</p>
+</div>
+<div class="flex items-center justify-between mt-4">
+<span class="text-xs text-white/30 flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">calendar_today</span>
+                            Uploaded Sep 28, 2023
+                        </span>
+<div class="flex gap-2">
+<button class="p-2 rounded-lg hollow-glass text-white/60 hover:text-white transition-colors">
+<span class="material-symbols-outlined text-sm">visibility</span>
+</button>
+<button class="p-2 rounded-lg bg-[#C9A84C]/10 text-[#C9A84C] hover:bg-[#C9A84C]/20 transition-colors">
+<span class="material-symbols-outlined text-sm">download</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="glass-card rounded-[14px] p-4 flex flex-col sm:flex-row gap-4 group transition-all duration-300">
+<div class="relative w-full sm:w-32 h-40 sm:h-32 flex-shrink-0 rounded-lg overflow-hidden bg-black/20">
+<img class="w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity" data-alt="professional lawyer hand signing a paper with a fountain pen on a desk" src="https://lh3.googleusercontent.com/aida-public/AB6AXuALz7rk7VixDgFI7rdbw3-FExSLbtiPrlzOeZ0m8lBODuJ_kvyFL1Ik9YSyAc6BB8BwU0I-JtAnTj-RwZYoEHjO8SvHY0O_pyScwq2hfSH6O7Mnb0vj5e8WRa_T0QfrREkw6TU1sifX8pdksay4UWXJvYJrhrQyx2cCznFPnPogtxgBq-kqSavCUBswWdfAWji0Nt371UIQdT7jZMl1H_JZIF08iiE_j7khk7l9H_5rofjqe9-KMZ-epTS4d15NcfE5ajLWInJW4CQ"/>
+<div class="absolute inset-0 flex items-center justify-center">
+<span class="material-symbols-outlined text-white/80 text-4xl" data-icon="assignment">assignment</span>
+</div>
+<div class="absolute top-2 left-2 px-2 py-1 bg-amber-500 text-[#0A1628] text-[10px] font-bold rounded uppercase tracking-wider shadow-lg">
+                        Deadline: Today
+                    </div>
+</div>
+<div class="flex-1 flex flex-col justify-between py-1">
+<div>
+<div class="flex justify-between items-start">
+<h3 class="font-h3 text-[18px] text-white group-hover:text-[#C9A84C] transition-colors">Notice_Violation_Civil.pdf</h3>
+<button class="text-white/40 hover:text-[#C9A84C]"><span class="material-symbols-outlined">more_vert</span></button>
+</div>
+<p class="text-white/40 text-sm mt-1">Property Dispute ΓÇó 12.5 MB</p>
+</div>
+<div class="flex items-center justify-between mt-4">
+<span class="text-xs text-white/30 flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">calendar_today</span>
+                            Uploaded Sep 15, 2023
+                        </span>
+<div class="flex gap-2">
+<button class="p-2 rounded-lg hollow-glass text-white/60 hover:text-white transition-colors">
+<span class="material-symbols-outlined text-sm">visibility</span>
+</button>
+<button class="p-2 rounded-lg bg-[#C9A84C]/10 text-[#C9A84C] hover:bg-[#C9A84C]/20 transition-colors">
+<span class="material-symbols-outlined text-sm">download</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="glass-card rounded-[14px] p-4 flex flex-col sm:flex-row gap-4 group transition-all duration-300">
+<div class="relative w-full sm:w-32 h-40 sm:h-32 flex-shrink-0 rounded-lg overflow-hidden bg-black/20">
+<img class="w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity" data-alt="macro photo of gold balance scales on a marble base reflecting soft light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBxSiISrkcko4FmkmpQXGfEWTJlV6JjYfLnSUfcOhywdH-7RiE075t1b8s7fM33M4_VImuPQ3gNguiLuXg2Gn7FtALi9n788Skrv3V4UmitwacC8ehg93Rxao5P2JX-Id7afpYOMl4x51KBUUBsIfQc-N99rFIC1plVKlYoI52d0F_z1IrtljV2U0AoksKcUNAmMoGOu5vN-EFEysMOD8qNxHzkFb0grqNBocwEza1AdI5pcKNBs1TWqpVwRucy_DVV4o_Xl-rYCDA"/>
+<div class="absolute inset-0 flex items-center justify-center">
+<span class="material-symbols-outlined text-white/80 text-4xl" data-icon="policy">policy</span>
+</div>
+</div>
+<div class="flex-1 flex flex-col justify-between py-1">
+<div>
+<div class="flex justify-between items-start">
+<h3 class="font-h3 text-[18px] text-white group-hover:text-[#C9A84C] transition-colors">Evidence_Batch_001.zip</h3>
+<button class="text-white/40 hover:text-[#C9A84C]"><span class="material-symbols-outlined">more_vert</span></button>
+</div>
+<p class="text-white/40 text-sm mt-1">Archived Digital Evidence ΓÇó 85 MB</p>
+</div>
+<div class="flex items-center justify-between mt-4">
+<span class="text-xs text-white/30 flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">calendar_today</span>
+                            Uploaded Aug 30, 2023
+                        </span>
+<div class="flex gap-2">
+<button class="p-2 rounded-lg hollow-glass text-white/60 hover:text-white transition-colors">
+<span class="material-symbols-outlined text-sm">visibility</span>
+</button>
+<button class="p-2 rounded-lg bg-[#C9A84C]/10 text-[#C9A84C] hover:bg-[#C9A84C]/20 transition-colors">
+<span class="material-symbols-outlined text-sm">download</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Storage Status (Premium Touch) -->
+<section class="glass-card p-6 rounded-2xl mb-12 border-dashed border-white/10">
+<div class="flex items-center justify-between mb-4">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[#C9A84C]" style="font-variation-settings: 'FILL' 1;">cloud_done</span>
+<h4 class="font-bold text-white">Vault Security &amp; Storage</h4>
+</div>
+<span class="text-white/60 text-sm font-medium">85% Capacity Used</span>
+</div>
+<div class="w-full h-2 bg-white/10 rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-[#C9A84C] to-[#E8C97A]" style="width: 85%"></div>
+</div>
+<div class="mt-4 flex flex-wrap gap-6 text-xs text-white/40">
+<span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#C9A84C]"></span> Documents: 2.4 GB</span>
+<span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#E8C97A]"></span> Evidence: 8.1 GB</span>
+<span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-white/20"></span> Free: 1.5 GB</span>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-safe h-20 bg-[#0A1628]/95 backdrop-blur-2xl border-t border-white/15 shadow-[0_-4px_20px_rgba(0,0,0,0.5)] rounded-t-2xl">
+<a class="flex flex-col items-center justify-center text-white/40 pt-2 hover:text-[#E8C97A] transition-colors active:scale-90 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-plus-jakarta-sans text-[10px] font-medium">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-white/40 pt-2 hover:text-[#E8C97A] transition-colors active:scale-90 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="document_scanner">document_scanner</span>
+<span class="font-plus-jakarta-sans text-[10px] font-medium">Scanner</span>
+</a>
+<a class="flex flex-col items-center justify-center text-white/40 pt-2 hover:text-[#E8C97A] transition-colors active:scale-90 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="grid_view">grid_view</span>
+<span class="font-plus-jakarta-sans text-[10px] font-medium">Dashboard</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#C9A84C] border-t-2 border-[#C9A84C] pt-2 active:scale-90 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="encrypted" style="font-variation-settings: 'FILL' 1;">encrypted</span>
+<span class="font-plus-jakarta-sans text-[10px] font-medium">Vault</span>
+</a>
+<a class="flex flex-col items-center justify-center text-white/40 pt-2 hover:text-[#E8C97A] transition-colors active:scale-90 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-plus-jakarta-sans text-[10px] font-medium">Settings</span>
+</a>
+</nav>
+</body></html>

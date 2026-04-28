@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+sentence-transformers
+faiss-cpu
+pandas
+python-multipart
+google-generativeai
+python-dotenv
+flask
+flask-cors
+PyPDF2
